@@ -11,37 +11,28 @@ Window {
     minimumHeight: rootLayout.Layout.minimumHeight
     maximumWidth: width
     maximumHeight: rootLayout.Layout.maximumHeight
-    title: qsTr("Hello World")
+    title: qsTr("Filter Types")
 
-    ColumnLayout {
+    GridLayout {
         id: rootLayout
         anchors.fill: parent
+        columns: 5
+        Layout.margins: 30
 
-        CircularValueBar {
-            id: circularValueBar
+        FilterControl {
+            filterType: "onePoleLowPassFilter"
         }
-        FilterCurve {
-            id: filterCurve
+        FilterControl {
+            filterType: "onePoleHighPassFilter"
         }
-
-        RowLayout {
-            Text {text: "Freq"}
-            Slider {
-                Layout.alignment: Qt.AlignHCenter
-                onPositionChanged: {
-                    circularValueBar.value = position * 100
-                    filterCurve.cutoffFreq = position * filterCurve.width;
-                }
-            }
+        FilterControl {
+            filterType: "twoPoleLowPassFilter"
         }
-        RowLayout {
-            Text {text: "Zoom"}
-            Slider {
-                Layout.alignment: Qt.AlignHCenter
-                onPositionChanged: {
-                    filterCurve.zoomIn = position * filterCurve.width + 1;
-                }
-            }
+        FilterControl {
+            filterType: "twoPoleHighPassFilter"
+        }
+        FilterControl {
+            filterType: "twoPoleBandPassFilter"
         }
     }
 }
