@@ -18,31 +18,26 @@ Item {
         anchors.fill: parent
         antialiasing: true
 
-        function log10Axes(fun, xAxisArgs) {
-            var expXAxisArgs = [];
-            for(var argOnXAxis in xAxisArgs){
-                expXAxisArgs.push( Math.pow(10, argOnXAxis / filter.zoomIn) );
+        function log10Axes() {
+            var theFunction;
+            var args = [];
+            for(var i = 0; i < arguments.length; ++i) {
+                if(0 == i) {
+                    theFunction = arguments[i];
+                }
+                else {
+                    args.push(Math.pow(10, arguments[i] / filter.zoomIn));
+                }
             }
-
             Math.log10 = Math.log10 || function(x) {
               return Math.log(x) * Math.LOG10E;
             };
-            return Math.log10(fun.apply(this, expXAxisArgs)) * filter.zoomIn;
+            return Math.log10(theFunction.apply(this, args)) * filter.zoomIn; // expand array as function argument list
         }
 
-        function fun(x) {
+        function onePoleFilterAmpTransfer(freq, cutoff) {
             var A = 1.0;
-
-            var freq = Math.pow(10, x / filter.zoomIn);
-            var cutoff = Math.pow(10, filter.cutoffFreq / filter.zoomIn);
-
-            var amp = A / Math.sqrt(1 + ( (freq * freq) / (cutoff * cutoff) ));
-
-
-            Math.log10 = Math.log10 || function(x) {
-              return Math.log(x) * Math.LOG10E;
-            };
-            return Math.log10(amp) * filter.zoomIn + 100;
+            return A / Math.sqrt(1 + ( (freq * freq) / (cutoff * cutoff) ));
         }
 
         onPaint: {
@@ -62,7 +57,7 @@ Item {
             ctx.moveTo(0,0)
 
             for (var x = 0; x < canvas.width; ++x){
-                ctx.lineTo(x, fun(x));
+                ctx.lineTo(x, log10Axes( onePoleFilterAmpTransfer, x, filter.cutoffFreq) + 100 );
             }
 
             ctx.resetTransform();
