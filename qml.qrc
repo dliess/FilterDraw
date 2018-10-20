@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>CircularValueBar.qml</file>
         <file>FilterCurve.qml</file>
         <file>FilterControl.qml</file>
     </qresource>
